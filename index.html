@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HEROES PROFILE</title>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    
+    <style>
+        body{
+            margin:20px 50px;
+            /* text-align: center; */
+        }
+        #header-section{
+            display:inline-block;
+            margin-right: 10px;
+        }
+        #button-box{
+            display:inline-flex;
+            padding-top: 10px;
+        }
+        header{
+            align-items: center;
+        }
+        button.hero{
+            color:black;
+            background-color:aliceblue;
+            width:300px;
+            display:block;
+            font-size: 20pt;
+            font-weight: bold;
+            overflow:visible;
+        }
+        button.hero:active{
+            background-color: black;
+            color:white;
+        } 
+        ul{
+            list-style-type: none;
+            padding:0;
+        }
+        li{
+            font-size: 16pt;
+        }
+    </style>
+    
+</head>
+<body center="true">
+    <div class='row jumbotron'>
+        <div id="header-section">
+            <h1 class="display-2">Heroes profile</h1>
+            <p class="display-6">select someone to view their profile.</p>
+        </div>
+        
+    </div>
+    <div class='row'>
+        <button id='button-add-hero' class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse-add-hero" aria-expanded="false" aria-controls="collapse-add-hero" onclick="document.getElementById('button-add-hero').innerHTML=document.getElementById('button-add-hero').innerHTML == 'Add more hero'?'Close':'Add more hero'">Add more hero</button>
+    </div>
+    <div class='row'>
+        
+        <div class="collapse multi-collapse" id="collapse-add-hero">
+            
+            <form action="" id='hero-create'>
+                <div class='form-group'>
+                    <div class='form-row'>
+                        <div class='col-md-8'>
+                            <img id='hero-pic' src="profile_pic/pic.png" alt="Hero's picture" style='width:200px;height:200px;'>
+                        </div>
+                        <div class='col-md-4'>
+                            <label for="hero-pic-upload">Upload hero's picture<input type="file" id='hero-pic-upload'></label>
+                            <progress value='0' max='100'>0%</progress> 
+                        </div>
+                    </div>
+                    <div class='form-row'>
+                        <div class='col-md-4'>
+                            <label for="heroname">Hero name<input type="text" id='heroname' class='form-control' size=100></label>
+                        </div>
+                        <div class='col-md-3'>
+                            <div class='form-group'>
+                                <label for="studio-selector">Studio
+                                    <select name="studio" id="studio-selector" class="custom-select">
+                                        <option value="0">Marvel.</option>
+                                        <option value="1">DC.</option>
+                                        <option value="2">Other(please specify).</option>
+                                        <option value="" selected hidden>Select studio.</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+                        <div class='col-md-4'>
+                            <label for="">Other studio.<input id='other-studio' type="text" class='form-control' size='100' disabled></label>
+                        </div>
+                    </div>
+                    <div class='form-row'>
+                        <label for="hero-color">Hero's color<input id='hero-color' class='form-control' type="color"></label><input id='hero-color-text' class='form-control' type="text" class='form-control'>
+                        <button type='submit' onclick='create_hero()'>Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+    <div class="content">
+        <div class="row">
+            <div class="col-4">
+                <div class='row'>
+                    <div class="nav navbar">
+                        <div>
+                            
+                        </div>
+                        <ul id="heroes" >
+                            
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8">
+                <div id="right-page">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyC-2rHVM65lDTcYkATUXyUQrM25JxE956s",
+            authDomain: "my-project-1520789442820.firebaseapp.com",
+            databaseURL: "https://my-project-1520789442820.firebaseio.com",
+            projectId: "my-project-1520789442820",
+            storageBucket: "my-project-1520789442820.appspot.com",
+            messagingSenderId: "546385381449"
+        };
+        firebase.initializeApp(config);
+        
+        heroesList = $('#heroes');
+        
+        dbref = firebase.database().ref().child('heroes');
+        storageref = firebase.storage().ref('sweet_gifs/download.jpg');
+        
+        storageref.getDownloadURL().then(res => {
+            $('#hero-pic').prop('src', res)
+            
+        })        
+        
+        dbref.on('value', snap => {
+            snap.forEach(element => {
+                $("#heroes").append("<li><button class='btn btn-submit hero " + element.val().name + "' href='#'>" + element.val().name + "</button></li>");
+                
+                $('button.' + element.val().name).hover(function(e){
+                    $(this).css({'color': 'black', 'background-color':element.val().color });
+                }).mouseout(function(){
+                    $(this).css({'color': 'black', 'background-color':'aliceblue' });
+                })
+                
+            })
+        })
+        
+        heroesList.delegate('a.hero', 'click', function(){
+            
+            $('#right-content').remove();
+            $('#right-page').append('<iframe id="right-content" src="add.html"/ height="500" width="100%" style="display:block;border:0;overflow:none">');
+                
+            })
+            
+            $('#studio-selector').on('change', function(){
+                if (this.value == 2 ){
+                    $('#other-studio').prop('disabled', false);
+                }else{
+                    $('#other-studio').prop('disabled', true);
+                }
+            })
+            
+            $('#hero-color-text').val($('#hero-color').val());
+
+        </script>
+    </body>
+    </html>
