@@ -99,7 +99,7 @@
                     </div>
                     <div class='form-row'>
                         <label for="hero-color">Hero's color<input id='hero-color' class='form-control' type="color"></label><input id='hero-color-text' class='form-control' type="text" class='form-control'>
-                        <button type='submit'>Submit</button>
+                        <button type='submit' class='btn btn-submit'>Submit</button>
                     </div>
                 </form>
             </div>
@@ -150,7 +150,7 @@
         /*
         heroes database ref
         */
-        
+
         dbref.on('value', snap => {
         })
         
@@ -216,6 +216,9 @@
                 from:from,
                 color:color
             })
+
+            $('#hero-create')[0].reset();
+            $('#button-add-hero').click()
             return false;
         })
         setColorText()
