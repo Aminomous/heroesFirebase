@@ -1,7 +1,10 @@
-<?php 
+<script>
+    
+</script>
 
 
-return {'message':'OK'};
+<?php
 
-
+$obj = array('status' => "200"); 
+echo json_encode($obj);
 ?>

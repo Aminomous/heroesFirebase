@@ -9,7 +9,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
     
@@ -67,7 +66,7 @@
         
         <div class="collapse multi-collapse" id="collapse-add-hero">
             
-            <form action="" id='hero-create'>
+            <form action="#" id='hero-create' class='require'>
                 <div class='form-group'>
                     <div class='form-row'>
                         <div class='col-md-8'>
@@ -80,14 +79,14 @@
                     </div>
                     <div class='form-row'>
                         <div class='col-md-4'>
-                            <label for="heroname">Hero name<input type="text" id='heroname' class='form-control' size=100></label>
+                            <label for="hero-name">Hero name<input type="text" id='hero-name' class='form-control' size=100></label>
                         </div>
                         <div class='col-md-3'>
                             <div class='form-group'>
-                                <label for="studio-selector">Studio
-                                    <select name="studio" id="studio-selector" class="custom-select">
-                                        <option value="0">Marvel.</option>
-                                        <option value="1">DC.</option>
+                                <label for="hero-studio">Studio
+                                    <select name="studio" id="hero-studio" class="custom-select">
+                                        <option value="0">Marvel</option>
+                                        <option value="1">DC</option>
                                         <option value="2">Other(please specify).</option>
                                         <option value="" selected hidden>Select studio.</option>
                                     </select>
@@ -100,7 +99,7 @@
                     </div>
                     <div class='form-row'>
                         <label for="hero-color">Hero's color<input id='hero-color' class='form-control' type="color"></label><input id='hero-color-text' class='form-control' type="text" class='form-control'>
-                        <button type='submit' onclick='create_hero()'>Submit</button>
+                        <button type='submit'>Submit</button>
                     </div>
                 </form>
             </div>
@@ -140,46 +139,87 @@
         };
         firebase.initializeApp(config);
         
-        heroesList = $('#heroes');
-        
         dbref = firebase.database().ref().child('heroes');
         storageref = firebase.storage().ref('sweet_gifs/download.jpg');
+        
+        heroesList = $('#heroes');
+        
+        
+        //Setting up firebase event
+        
+        /*
+        heroes database ref
+        */
+        
+        dbref.on('value', snap => {
+        })
+        
+        dbref.on('child_added', function(data){
+            $("#heroes").append(herolistCreateHelper(data))
+            
+        })
+        dbref.on('child_removed', function(data){
+            $("#" + data.key).remove();
+            
+        })
+        
+        /*
+        heroes profile image
+        */
         
         storageref.getDownloadURL().then(res => {
             $('#hero-pic').prop('src', res)
             
         })        
         
-        dbref.on('value', snap => {
-            snap.forEach(element => {
-                $("#heroes").append("<li><button class='btn btn-submit hero " + element.val().name + "' href='#'>" + element.val().name + "</button></li>");
-                
-                $('button.' + element.val().name).hover(function(e){
-                    $(this).css({'color': 'black', 'background-color':element.val().color });
-                }).mouseout(function(){
-                    $(this).css({'color': 'black', 'background-color':'aliceblue' });
-                })
-                
+        
+        function herolistCreateHelper(param){
+            $("#heroes").append("<li><button id=" + param.key + "  class='btn btn-submit hero " + param.val().key + "' href='#'>" + param.val().name + "</button></li>");
+            
+            $('button#' + param.key).hover(function(e){
+                $(this).css({'color': 'black', 'background-color':param.val().color });
+            }).mouseout(function(){
+                $(this).css({'color': 'black', 'background-color':'aliceblue' });
             })
+        }
+        
+        /*
+        Webpage all event 
+        */
+        
+        $('#hero-studio').on('change', function(){
+            if (this.value == 2 ){
+                $('#other-studio').prop('disabled', false);
+            }else{
+                $('#other-studio').prop('disabled', true);
+            }
+        })
+        function setColorText(){
+            $('#hero-color-text').val($('#hero-color').val())
+        }
+        $('#hero-color').on('change', function(){
+            setColorText()
         })
         
-        heroesList.delegate('a.hero', 'click', function(){
+        $('#hero-create').submit(function(){
+            name = $('#hero-name').val();
+            from = $('#hero-studio').val();
+            if (from < 2){
+                from = $('#hero-studio option:selected').text();
+            }else{
+                from = $('#other-studio').val();
+            }
+            color = $('#hero-color-text').val();
             
-            $('#right-content').remove();
-            $('#right-page').append('<iframe id="right-content" src="add.html"/ height="500" width="100%" style="display:block;border:0;overflow:none">');
-                
+            newHero = dbref.push({
+                name:name,
+                from:from,
+                color:color
             })
-            
-            $('#studio-selector').on('change', function(){
-                if (this.value == 2 ){
-                    $('#other-studio').prop('disabled', false);
-                }else{
-                    $('#other-studio').prop('disabled', true);
-                }
-            })
-            
-            $('#hero-color-text').val($('#hero-color').val());
-
-        </script>
-    </body>
-    </html>
+            return false;
+        })
+        setColorText()
+        
+    </script>
+</body>
+</html>
