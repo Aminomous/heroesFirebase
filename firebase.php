@@ -49,6 +49,7 @@ firebase.initializeApp(config);
 
 var uploader = document.getElementById('uploader');
 var fileButton = document.getElementById('fileButton');
+console.log(fileButton);
 
 fileButton.addEventListener('change', function(e){
     var file = e.target.files[0];
@@ -63,7 +64,7 @@ fileButton.addEventListener('change', function(e){
         alert("UPLOAD FAILED")
     },
     function complete() {
-        alert("UPLOAD COMPLETED")
+        console.log("UPLOAD COMPLETED")
     }
     )
     console.log(task)

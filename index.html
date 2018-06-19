@@ -11,44 +11,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-    
-    <style>
-        body{
-            margin:20px 50px;
-            /* text-align: center; */
-        }
-        #header-section{
-            display:inline-block;
-            margin-right: 10px;
-        }
-        #button-box{
-            display:inline-flex;
-            padding-top: 10px;
-        }
-        header{
-            align-items: center;
-        }
-        button.hero{
-            color:black;
-            background-color:aliceblue;
-            width:300px;
-            display:block;
-            font-size: 20pt;
-            font-weight: bold;
-            overflow:visible;
-        }
-        button.hero:active{
-            background-color: black;
-            color:white;
-        } 
-        ul{
-            list-style-type: none;
-            padding:0;
-        }
-        li{
-            font-size: 16pt;
-        }
-    </style>
+    <script src="http://cryptojs.altervista.org/api/functions_cryptography.js"></script>
+    <script src="script.js"></script> 
+    <link rel="stylesheet" href="style.css">
     
 </head>
 <body center="true">
@@ -64,7 +29,7 @@
     </div>
     <div class='row'>
         
-        <div class="collapse multi-collapse" id="collapse-add-hero">
+        <div class="collapse multi-collapse col-md-6" id="collapse-add-hero">
             
             <form action="#" id='hero-create' class='require'>
                 <div class='form-group'>
@@ -112,117 +77,32 @@
                 <div class='row'>
                     <div class="nav navbar">
                         <div>
-                            
+                            <ul id="heroes" >
+                                <!-- 
+                                    generate by jquery
+                                 -->
+                            </ul>
                         </div>
-                        <ul id="heroes" >
-                            
-                        </ul>
+
                     </div>
                 </div>
             </div>
             <div class="col-8">
-                <div id="right-page">
-                    
+                <div id="right-content" class='collapse multi-collapse'>
+                    <div class='row'>
+                        <div id='hero-profile-img'>
+                            <img src="" alt="hero's image">
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div id='hero-profile'>
+                            <h1>TEMP DATA IN DIV PROFILE</h1>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        // Initialize Firebase
-        var config = {
-            apiKey: "AIzaSyC-2rHVM65lDTcYkATUXyUQrM25JxE956s",
-            authDomain: "my-project-1520789442820.firebaseapp.com",
-            databaseURL: "https://my-project-1520789442820.firebaseio.com",
-            projectId: "my-project-1520789442820",
-            storageBucket: "my-project-1520789442820.appspot.com",
-            messagingSenderId: "546385381449"
-        };
-        firebase.initializeApp(config);
-        
-        dbref = firebase.database().ref().child('heroes');
-        storageref = firebase.storage().ref('sweet_gifs/download.jpg');
-        
-        heroesList = $('#heroes');
-        
-        
-        //Setting up firebase event
-        
-        /*
-        heroes database ref
-        */
-
-        dbref.on('value', snap => {
-        })
-        
-        dbref.on('child_added', function(data){
-            $("#heroes").append(herolistCreateHelper(data))
-            
-        })
-        dbref.on('child_removed', function(data){
-            $("#" + data.key).remove();
-            
-        })
-        
-        /*
-        heroes profile image
-        */
-        
-        storageref.getDownloadURL().then(res => {
-            $('#hero-pic').prop('src', res)
-            
-        })        
-        
-        
-        function herolistCreateHelper(param){
-            $("#heroes").append("<li><button id=" + param.key + "  class='btn btn-submit hero " + param.val().key + "' href='#'>" + param.val().name + "</button></li>");
-            
-            $('button#' + param.key).hover(function(e){
-                $(this).css({'color': 'black', 'background-color':param.val().color });
-            }).mouseout(function(){
-                $(this).css({'color': 'black', 'background-color':'aliceblue' });
-            })
-        }
-        
-        /*
-        Webpage all event 
-        */
-        
-        $('#hero-studio').on('change', function(){
-            if (this.value == 2 ){
-                $('#other-studio').prop('disabled', false);
-            }else{
-                $('#other-studio').prop('disabled', true);
-            }
-        })
-        function setColorText(){
-            $('#hero-color-text').val($('#hero-color').val())
-        }
-        $('#hero-color').on('change', function(){
-            setColorText()
-        })
-        
-        $('#hero-create').submit(function(){
-            name = $('#hero-name').val();
-            from = $('#hero-studio').val();
-            if (from < 2){
-                from = $('#hero-studio option:selected').text();
-            }else{
-                from = $('#other-studio').val();
-            }
-            color = $('#hero-color-text').val();
-            
-            newHero = dbref.push({
-                name:name,
-                from:from,
-                color:color
-            })
-
-            $('#hero-create')[0].reset();
-            $('#button-add-hero').click()
-            return false;
-        })
-        setColorText()
-        
-    </script>
+    
 </body>
 </html>
