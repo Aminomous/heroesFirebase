@@ -12,8 +12,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
     <script src="http://cryptojs.altervista.org/api/functions_cryptography.js"></script>
-    <script src="script.js"></script> 
-    <link rel="stylesheet" href="style.css">
+    <script src="/firebase/script.js"></script> 
+    <link rel="stylesheet" href="/firebase/style.css">
     
 </head>
 <body center="true">
@@ -31,14 +31,14 @@
         
         <div class="collapse multi-collapse col-md-6" id="collapse-add-hero">
             
-            <form action="#" id='hero-create' class='require'>
+            <form id='hero-create' method="POST" action="#">
                 <div class='form-group'>
                     <div class='form-row'>
                         <div class='col-md-8'>
-                            <img id='hero-pic' src="profile_pic/pic.png" alt="Hero's picture" style='width:200px;height:200px;'>
+                            <img id='hero-profile-img' src="profile_pic/pic.png" alt="Hero's picture" style='width:200px;height:200px;'>
                         </div>
                         <div class='col-md-4'>
-                            <label for="hero-pic-upload">Upload hero's picture<input type="file" id='hero-pic-upload'></label>
+                            <label for="hero-profile-img-upload">Upload hero's picture<input type="file" id='hero-profile-img-upload'></label>
                             <progress value='0' max='100'>0%</progress> 
                         </div>
                     </div>
@@ -64,6 +64,7 @@
                     </div>
                     <div class='form-row'>
                         <label for="hero-color">Hero's color<input id='hero-color' class='form-control' type="color"></label><input id='hero-color-text' class='form-control' type="text" class='form-control'>
+                        <input type="submit">
                         <button type='submit' class='btn btn-submit'>Submit</button>
                     </div>
                 </form>

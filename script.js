@@ -1,3 +1,4 @@
+<script src="http://cryptojs.altervista.org/api/functions_cryptography.js"></script>
 
 // Initialize Firebase
 var config = {
@@ -15,7 +16,9 @@ storageref = firebase.storage().ref();
 hero_picref = storageref.child('heroes_pic');
 
 heroesList = $('#heroes');
-$('#hero-pic-upload').change(function(e){
+$('#hero-profile-image-upload').change(function(e){
+    console.log("WORKING");
+    
     file = e.target.files[0]
     console.log(file.name);
     
@@ -79,6 +82,7 @@ function showprofile(param){
         isShow = !isShow;
         dbref.child(showingID).on('value', function(snap){
             $('#hero-profile h1').text('THIS IS ' + snap.val().name)
+            $('#hero-profile-image img').src(snap.val().profile_img)
         })
         $('#right-content').collapse('toggle')
     }
@@ -104,8 +108,11 @@ $('#hero-color').on('change', function(){
 })
 
 $('#hero-create').submit(function(){
+    alert('test')
+    
     name = $('#hero-name').val();
     from = $('#hero-studio').val();
+    profile_img = $('#hero-profile-img-upload').val();
     if (from < 2){
         from = $('#hero-studio option:selected').text();
     }else{
@@ -118,6 +125,7 @@ $('#hero-create').submit(function(){
         from:from,
         color:color
     })
+    console.log(newHero);
     
     $('#hero-create')[0].reset();
     $('#button-add-hero').click()
